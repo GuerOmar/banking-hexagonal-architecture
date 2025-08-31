@@ -4,10 +4,7 @@ import com.banking.application.exception.AccountNotFoundException;
 import com.banking.application.exception.ApplicationException;
 import com.banking.application.port.in.GetTransactionHistoryUseCase;
 import com.banking.application.port.in.TransferMoneyUseCase;
-import com.banking.application.port.out.LoadAccountPort;
-import com.banking.application.port.out.LoadTransactionPort;
-import com.banking.application.port.out.SaveAccountPort;
-import com.banking.application.port.out.SaveTransactionPort;
+import com.banking.application.port.out.*;
 import com.banking.domain.model.Account;
 import com.banking.domain.model.Transaction;
 import jakarta.transaction.Transactional;
@@ -24,12 +21,14 @@ public class TransactionService implements TransferMoneyUseCase, GetTransactionH
     private final LoadAccountPort loadAccountPort;
     private final SaveTransactionPort saveTransactionPort;
     private final LoadTransactionPort loadTransactionPort;
+    private final SendEmailNotificationPort sendEmailNotificationPort;
 
-    public TransactionService(SaveAccountPort saveAccountPortository, LoadAccountPort loadAccountPort, SaveTransactionPort saveTransactionPort, LoadTransactionPort loadTransactionPort) {
+    public TransactionService(SaveAccountPort saveAccountPortository, LoadAccountPort loadAccountPort, SaveTransactionPort saveTransactionPort, LoadTransactionPort loadTransactionPort, SendEmailNotificationPort sendEmailNotificationPort) {
         this.saveAccountPort = saveAccountPortository;
         this.loadAccountPort = loadAccountPort;
         this.saveTransactionPort = saveTransactionPort;
         this.loadTransactionPort = loadTransactionPort;
+        this.sendEmailNotificationPort = sendEmailNotificationPort;
     }
 
     @Transactional
@@ -41,7 +40,9 @@ public class TransactionService implements TransferMoneyUseCase, GetTransactionH
                 .orElseThrow(() -> new AccountNotFoundException("Target account with ID " + toId + " not found"));
 
         if (from.getBalance().compareTo(amount) < 0) {
-            throw new ApplicationException("Insufficient balance for account " + fromId);
+            String message = "Insufficient balance for account " + fromId;
+            sendEmailNotificationPort.notifyTransactionFailed(from.getId(), message);
+            throw new ApplicationException(message);
         }
 
         from.setBalance(from.getBalance().subtract(amount));

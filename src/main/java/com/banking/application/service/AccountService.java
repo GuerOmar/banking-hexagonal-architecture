@@ -10,6 +10,7 @@ import com.banking.application.port.in.WithdrawUseCase;
 import com.banking.application.port.out.LoadAccountPort;
 import com.banking.application.port.out.LoadUserPort;
 import com.banking.application.port.out.SaveAccountPort;
+import com.banking.application.port.out.SendEmailNotificationPort;
 import com.banking.domain.model.Account;
 import com.banking.domain.model.User;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,13 @@ public class AccountService implements CreateAccountUseCase, GetAccountUseCase, 
     private final SaveAccountPort saveAccountPort;
     private final LoadAccountPort loadAccountPort;
     private final LoadUserPort loadUserPort;
+    private final SendEmailNotificationPort sendEmailNotificationPort;
 
-    public AccountService(SaveAccountPort saveAccountPort, LoadUserPort loadUserPort, LoadAccountPort loadAccountPort) {
+    public AccountService(SaveAccountPort saveAccountPort, LoadUserPort loadUserPort, LoadAccountPort loadAccountPort, SendEmailNotificationPort sendEmailNotificationPort) {
         this.saveAccountPort = saveAccountPort;
         this.loadUserPort = loadUserPort;
         this.loadAccountPort = loadAccountPort;
+        this.sendEmailNotificationPort = sendEmailNotificationPort;
     }
 
     @Override
@@ -72,7 +75,9 @@ public class AccountService implements CreateAccountUseCase, GetAccountUseCase, 
                 .orElseThrow(() -> new AccountNotFoundException("Account with ID " + accountId + " not found"));
 
         if (account.getBalance().compareTo(amount) < 0) {
-            throw new ApplicationException("Insufficient balance for account " + accountId);
+            String message = "Insufficient balance for account " + accountId;
+            sendEmailNotificationPort.notifyTransactionFailed(account.getId(), message);
+            throw new ApplicationException(message);
         }
 
         account.setBalance(account.getBalance().subtract(amount));
