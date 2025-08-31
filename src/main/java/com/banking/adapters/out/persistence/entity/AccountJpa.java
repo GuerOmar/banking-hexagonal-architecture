@@ -9,6 +9,7 @@ import java.util.UUID;
 public class AccountJpa {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -13,6 +13,11 @@ public class User {
         this.email = email;
     }
 
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
     public UUID getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email; }

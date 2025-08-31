@@ -23,7 +23,6 @@ public class TransactionPersistenceAdapter implements SaveTransactionPort, LoadT
     @Override
     public Transaction save(Transaction transaction) {
         TransactionJpa entity = new TransactionJpa(
-                transaction.getId(),
                 transaction.getFromAccountId(),
                 transaction.getToAccountId(),
                 transaction.getAmount(),

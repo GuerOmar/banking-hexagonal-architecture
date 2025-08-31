@@ -36,7 +36,7 @@ public class AccountService implements CreateAccountUseCase, GetAccountUseCase, 
         User user = loadUserPort.loadById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
 
-        Account account = new Account(UUID.randomUUID(), user, initialBalance);
+        Account account = new Account(user, initialBalance);
         saveAccountPort.save(account);
         return account;
     }

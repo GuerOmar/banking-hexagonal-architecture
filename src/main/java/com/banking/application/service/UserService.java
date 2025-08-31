@@ -24,7 +24,7 @@ public class UserService implements CreateUserUseCase, GetUserUseCase {
 
     @Override
     public User createUser(String name, String email) {
-        User user = new User(UUID.randomUUID(), name, email);
+        User user = new User(name, email);
         saveUserPort.save(user);
         return user;
     }

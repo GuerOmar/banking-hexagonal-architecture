@@ -29,7 +29,6 @@ public class AccountPersistenceAdapter implements SaveAccountPort, LoadAccountPo
     @Override
     public void save(Account account) {
         AccountJpa entity = new AccountJpa();
-        entity.setId(account.getId());
         entity.setBalance(account.getBalance());
 
         UUID ownerId = account.getOwner().getId();

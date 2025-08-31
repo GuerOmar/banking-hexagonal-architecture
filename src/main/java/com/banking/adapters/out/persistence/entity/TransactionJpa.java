@@ -10,6 +10,7 @@ import java.util.UUID;
 public class TransactionJpa{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private UUID fromAccountId;
@@ -20,8 +21,7 @@ public class TransactionJpa{
     public TransactionJpa() {
     }
 
-    public TransactionJpa(UUID id, UUID fromAccountId, UUID toAccountId, BigDecimal amount, LocalDateTime timestamp) {
-        this.id = id;
+    public TransactionJpa(UUID fromAccountId, UUID toAccountId, BigDecimal amount, LocalDateTime timestamp) {
         this.fromAccountId = fromAccountId;
         this.toAccountId = toAccountId;
         this.amount = amount;

@@ -51,7 +51,6 @@ public class TransactionService implements TransferMoneyUseCase, GetTransactionH
         saveAccountPort.save(to);
 
         Transaction transaction = new Transaction(
-                UUID.randomUUID(),
                 fromId,
                 toId,
                 amount,

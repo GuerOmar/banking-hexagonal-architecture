@@ -14,6 +14,11 @@ public class Account {
         this.balance = balance;
     }
 
+    public Account(User owner, BigDecimal balance) {
+        this.owner = owner;
+        this.balance = balance;
+    }
+
     public UUID getId() { return id; }
     public User getOwner() { return owner; }
     public BigDecimal getBalance() { return balance; }

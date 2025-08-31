@@ -19,6 +19,13 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
+    public Transaction(UUID fromAccountId, UUID toAccountId, BigDecimal amount, LocalDateTime timestamp) {
+        this.fromAccountId = fromAccountId;
+        this.toAccountId = toAccountId;
+        this.amount = amount;
+        this.timestamp = timestamp;
+    }
+
     public UUID getId() {
         return id;
     }

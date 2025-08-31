@@ -9,6 +9,7 @@ import java.util.UUID;
 public class UserJpa {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
