@@ -8,6 +8,8 @@ import com.banking.domain.model.Transaction;
 
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +38,21 @@ public class TransactionPersistenceAdapter implements SaveTransactionPort, LoadT
     public List<Transaction> loadByAccountId(UUID accountId) {
         return repository.findByAccountId(accountId)
                 .stream()
-                .map(t -> new Transaction(t.getId(), t.getFromAccountId(), t.getToAccountId(), t.getAmount(), t.getTimestamp()))
+                .map(this::mapToTransaction)
                 .toList();
+    }
+
+    @Override
+    public List<Transaction> loadByDate(LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.plusDays(1).atStartOfDay().minusNanos(1);
+        return repository.findByBetweenTwoDates(startOfDay, endOfDay)
+                .stream()
+                .map(this::mapToTransaction)
+                .toList();
+    }
+
+    private Transaction mapToTransaction(TransactionJpa t) {
+        return new Transaction(t.getId(), t.getFromAccountId(), t.getToAccountId(), t.getAmount(), t.getTimestamp());
     }
 }
