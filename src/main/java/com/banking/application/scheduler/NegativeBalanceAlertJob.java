@@ -19,11 +19,9 @@ public class NegativeBalanceAlertJob {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void checkNegativeBalances() {
-        List<Account> accounts = loadAccountPort.loadAll();
+        List<Account> accounts = loadAccountPort.loadAllNegativeBalanceAccounts();
 
-        accounts.stream()
-                .filter(acc -> acc.getBalance().compareTo(BigDecimal.ZERO) < 0)
-                .forEach(acc -> System.out.println(
+        accounts.forEach(acc -> System.out.println(
                         "Account " + acc.getId() + " has negative balance : " + acc.getBalance()));
     }
 }

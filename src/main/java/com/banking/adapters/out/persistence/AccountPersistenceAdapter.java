@@ -58,6 +58,12 @@ public class AccountPersistenceAdapter implements SaveAccountPort, LoadAccountPo
                 .stream().map(this::mapToDomain).toList();
     }
 
+    @Override
+    public List<Account> loadAllNegativeBalanceAccounts() {
+        return accountRepo.findNegativeBalance()
+                .stream().map(this::mapToDomain).toList();
+    }
+
     private Account mapToDomain(AccountJpa jpa) {
         return new Account(
                 jpa.getId(),

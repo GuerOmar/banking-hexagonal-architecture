@@ -13,4 +13,7 @@ import java.util.UUID;
 public interface AccountRepository extends JpaRepository<AccountJpa, UUID> {
     @Query("SELECT ac FROM AccountJpa ac WHERE ac.owner.id = :userId")
     List<AccountJpa> findByUserId(@Param("userId") UUID userId);
+
+    @Query("SELECT ac FROM AccountJpa ac WHERE ac.balance < 0")
+    List<AccountJpa> findNegativeBalance();
 }

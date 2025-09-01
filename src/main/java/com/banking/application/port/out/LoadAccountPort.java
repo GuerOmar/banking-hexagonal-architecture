@@ -10,4 +10,5 @@ public interface LoadAccountPort {
     Optional<Account> loadById(UUID accountId);
     List<Account> loadAll();
     List<Account> loadByUserId(UUID userId);
+    List<Account> loadAllNegativeBalanceAccounts();
 }
